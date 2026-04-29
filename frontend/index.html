@@ -7,11 +7,9 @@
     <title>Granja Premium - Catálogo de Aves</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Define la imagen de fondo de la cabecera. REEMPLAZA CON LA URL DE TU IMAGEN */
         .bg-farm-hero {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6)), url('TU_URL_DE_IMAGEN_CABECERA.jpg');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6)), 
+                        url('TU_URL_DE_IMAGEN_CABECERA.jpg') center/cover no-repeat;
         }
     </style>
 </head>
@@ -20,28 +18,31 @@
 
     <header class="bg-white sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-2 text-xl font-bold text-gray-950">
-                <span
-                    class="w-8 h-8 flex items-center justify-center bg-[#F37E58] text-white rounded-full text-lg font-serif">g</span>
+            <!-- Logo principal -->
+            <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-gray-950">
+                <span class="w-8 h-8 flex items-center justify-center bg-[#F37E58] text-white rounded-full text-lg font-serif">g</span>
                 Granja Premium
             </a>
+
+            <!-- Navegación central -->
             <div class="hidden md:flex items-center gap-8 text-sm text-gray-700">
-                <a href="#" class="hover:text-gray-950">Inicio</a>
-                <a href="#" class="hover:text-gray-950">Catálogo</a>
+                <a href="index.html" class="hover:text-gray-950 transition-colors">Inicio</a>
+                <a href="catalogo.html" class="hover:text-gray-950 transition-colors">Catálogo</a>
             </div>
+
+            <!-- Acciones de usuario -->
             <div class="flex items-center gap-6 text-sm">
-                <div class="relative">
-                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                        </path>
+                <a href="carrito.html" class="relative group">
+                    <svg class="w-6 h-6 text-gray-700 group-hover:text-[#D65D46] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                    <span
-                        class="absolute -top-2 -right-3 w-5 h-5 bg-[#D65D46] text-white text-[11px] rounded-full flex items-center justify-center font-semibold">12</span>
-                </div>
-                <a href="#" class="text-gray-700 hover:text-gray-950">Iniciar sesión</a>
-                <a href="#"
-                    class="bg-[#D65D46] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#b84d39] transition">Registrarse</a>
+                    <span class="absolute -top-2 -right-3 w-5 h-5 bg-[#D65D46] text-white text-[11px] rounded-full flex items-center justify-center font-semibold">12</span>
+                </a>
+
+                <a href="login.html" class="text-gray-700 hover:text-gray-950 font-medium transition-colors">Iniciar sesión</a>
+                <a href="registrarse.html" class="bg-[#D65D46] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#b84d39] transition-all shadow-sm active:scale-95">
+                    Registrarse
+                </a>
             </div>
         </nav>
     </header>
@@ -49,24 +50,18 @@
     <section class="bg-farm-hero min-h-[60vh] flex items-center border-b border-gray-100">
         <div class="container mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div class="space-y-6 max-w-xl">
-                <p class="text-xs uppercase tracking-wider text-[#D65D46] font-medium">GENÉTICA PREMIUM - CRIANZA
-                    RESPONSABLE</p>
+                <p class="text-xs uppercase tracking-wider text-[#D65D46] font-medium">GENÉTICA PREMIUM - CRIANZA RESPONSABLE</p>
                 <h1 class="text-5xl md:text-6xl font-serif font-extrabold text-gray-950 leading-tight">
-                    Pollos, guajolotes y gallos de pelea con <span class="text-[#D65D46]">linaje
-                        certificado.</span>
+                    Pollos, guajolotes y gallos de pelea con <span class="text-[#D65D46]">linaje certificado.</span>
                 </h1>
                 <p class="text-lg text-gray-800 leading-relaxed">
-                    Razas seleccionadas para postura, engorda, doble propósito y combate. Compra en línea con
-                    seguimiento en tiempo real desde el corral hasta tu domicilio.
+                    Razas seleccionadas para postura, engorda, doble propósito y combate. Compra en línea con seguimiento en tiempo real desde el corral hasta tu domicilio.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                    <a href="#"
-                        class="inline-flex items-center justify-center gap-2.5 bg-[#D65D46] text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-[#b84d39] transition text-lg group">
+                    <a href="catalogo.html" class="inline-flex items-center justify-center gap-2.5 bg-[#D65D46] text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-[#b84d39] transition text-lg group">
                         Ver catálogo
-                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
                     </a>
                 </div>
@@ -76,97 +71,82 @@
 
     <section class="py-20 bg-[#FDFCF9]">
         <div class="container mx-auto px-6">
-
+            <!-- Features -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-4 hover:shadow-md transition-shadow">
                     <div class="text-[#D65D46]">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
                     </div>
                     <h3 class="text-xl font-bold text-gray-950">Razas certificadas</h3>
-                    <p class="text-gray-700 text-sm leading-relaxed">Criolla, Isa Brown, Sussex, Amberlink, Orpington y
-                        líneas premium de combate.</p>
+                    <p class="text-gray-700 text-sm leading-relaxed">Criolla, Isa Brown, Sussex, Amberlink, Orpington y líneas premium de combate.</p>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-4 hover:shadow-md transition-shadow">
                     <div class="text-[#D65D46]">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                     </div>
                     <h3 class="text-xl font-bold text-gray-950">Genealogía garantizada</h3>
-                    <p class="text-gray-700 text-sm leading-relaxed">Cada gallo de pelea incluye descripción genética y
-                        curiosidades del linaje.</p>
+                    <p class="text-gray-700 text-sm leading-relaxed">Cada gallo de pelea incluye descripción genética y curiosidades del linaje.</p>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-4 hover:shadow-md transition-shadow">
                     <div class="text-[#D65D46]">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
                     <h3 class="text-xl font-bold text-gray-950">Envío con animación viva</h3>
-                    <p class="text-gray-700 text-sm leading-relaxed">Sigue tu pedido: comprado → paquetería →
-                        trasladando → llegando.</p>
+                    <p class="text-gray-700 text-sm leading-relaxed">Sigue tu pedido: comprado → paquetería → trasladando → llegando.</p>
                 </div>
-
             </div>
 
+            <!-- Categorías -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
+                <!-- Pollos -->
                 <div class="relative group overflow-hidden rounded-2xl shadow-lg h-96">
-                    <img src="TU_URL_IMAGEN_POLLOS_VIVOS.jpg" alt="Pollos Vivos en pasto"
-                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 p-8 flex flex-col justify-end">
+                    <img src="TU_URL_IMAGEN_POLLOS_VIVOS.jpg" alt="Pollos Vivos" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-8 flex flex-col justify-end">
                         <p class="text-xs uppercase tracking-wider text-gray-200">CATEGORÍA</p>
                         <h4 class="text-2xl font-bold text-white mb-2">Pollos vivos</h4>
                         <p class="text-sm text-gray-300">Postura · Engorda · Doble propósito</p>
-                        <a href="#" class="absolute inset-0 z-10"></a>
+                        <a href="catalogo.html?cat=pollos" class="absolute inset-0"></a>
                     </div>
                 </div>
 
+                <!-- Guilos -->
                 <div class="relative group overflow-hidden rounded-2xl shadow-lg h-96">
-                    <img src="TU_URL_IMAGEN_GALLO_DE_PELEA.jpg" alt="Gallo de Pelea Premium"
-                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 p-8 flex flex-col justify-end">
+                    <img src="TU_URL_IMAGEN_GUAJOLOTES.jpg" alt="Guilos" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-8 flex flex-col justify-end">
                         <p class="text-xs uppercase tracking-wider text-gray-200">CATEGORÍA</p>
                         <h4 class="text-2xl font-bold text-white mb-2">Guilos</h4>
                         <p class="text-sm text-gray-300">Postura · Engorda · Doble propósito</p>
-                        <a href="#" class="absolute inset-0 z-10"></a>
+                        <a href="catalogo.html?cat=guilos" class="absolute inset-0"></a>
                     </div>
                 </div>
 
+                <!-- Gallos de Pelea -->
                 <div class="relative group overflow-hidden rounded-2xl shadow-lg h-96">
-                    <img src="TU_URL_IMAGEN_GALLO_DE_PELEA.jpg" alt="Gallo de Pelea en fondo gris"
-                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20 p-8 flex flex-col justify-end">
+                    <img src="TU_URL_IMAGEN_GALLO_DE_PELEA.jpg" alt="Gallos de Pelea" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-8 flex flex-col justify-end">
                         <p class="text-xs uppercase tracking-wider text-gray-200">CATEGORÍA</p>
                         <h4 class="text-2xl font-bold text-white mb-2">Gallos de pelea</h4>
                         <p class="text-sm text-gray-300">Sweater · Kelso · Hatch · Radio · Brownred</p>
-                        <a href="#" class="absolute inset-0 z-10"></a>
+                        <a href="catalogo.html?cat=pelea" class="absolute inset-0"></a>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <footer class="bg-white border-t border-gray-100 py-6">
-        <div class="container mx-auto px-6 text-center text-xs text-gray-600">
+    <footer class="bg-white border-t border-gray-100 py-10">
+        <div class="container mx-auto px-6 text-center text-xs text-gray-500">
             <p>&copy; Granja Premium @ 2026 - Todos los derechos reservados</p>
         </div>
     </footer>
 
 </body>
-
 </html>
