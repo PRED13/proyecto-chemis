@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Completo - Granja Premium</title>
+    <title>Catálogo - Granja Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#FDFCF9] text-gray-900 font-sans">
@@ -15,18 +15,20 @@
                 <span class="w-8 h-8 flex items-center justify-center bg-[#F37E58] text-white rounded-full text-lg font-serif">g</span>
                 Granja Premium
             </a>
+            
             <div class="hidden md:flex items-center gap-8 text-sm text-gray-700">
                 <a href="index.html" class="hover:text-gray-950">Inicio</a>
                 <a href="catalogo.html" class="font-bold text-gray-950">Catálogo</a>
-                </div>
             </div>
+
             <div class="flex items-center gap-6 text-sm">
-                <!-- Enlace al Carrito añadido aquí -->
+                <!-- Enlace al Carrito con Contador Dinámico -->
                 <a href="carrito.html" class="relative group cursor-pointer" title="Ver carrito">
                     <svg class="w-6 h-6 text-gray-700 group-hover:text-[#D65D46] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                    <span class="absolute -top-2 -right-3 w-5 h-5 bg-[#D65D46] text-white text-[11px] rounded-full flex items-center justify-center font-semibold">12</span>
+                    <!-- El span será controlado por actualizarContadorCarrito() en main.js -->
+                    <span id="carrito-count" class="absolute -top-2 -right-3 w-5 h-5 bg-[#D65D46] text-white text-[11px] rounded-full flex items-center justify-center font-semibold hidden">0</span>
                 </a>
             
                 <a href="registrarse.html" class="bg-[#D65D46] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#b84d39] transition text-sm">
@@ -39,253 +41,34 @@
     <main class="container mx-auto px-6 py-12">
         <!-- Encabezado Principal -->
         <section class="mb-12">
-            <p class="text-xs uppercase tracking-[0.2em] text-[#D65D46] font-semibold mb-2">CATÁLOGO</p>
-            <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-950 mb-4">Selecciona tu raza</h1>
-            <p class="text-gray-600 text-lg">Inventario en tiempo real. Cada compra reduce el stock automáticamente.</p>
+            <p class="text-xs uppercase tracking-[0.2em] text-[#D65D46] font-semibold mb-2">INVENTARIO REAL</p>
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-950 mb-4">Nuestros Ejemplares</h1>
+            <p class="text-gray-600 text-lg">Selección premium gestionada desde SQL Server con actualización en tiempo real.</p>
         </section>
 
-        <!-- Filtros Rápidos (Anclajes internos) -->
-        <div class="flex gap-4 mb-12">
-            <a href="#pollos" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-300 transition">Pollos vivos</a>
-            <a href="#gallos" class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50 transition">Gallos de pelea</a>
+        <!-- Filtros Rápidos (Opcional para implementación futura con el backend) -->
+        <div class="flex flex-wrap gap-4 mb-12">
+            <button onclick="filtrar('Todos')" class="bg-gray-900 text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider">Todos</button>
+            <button onclick="filtrar('Pollos')" class="bg-white border border-gray-200 text-gray-600 px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-50 transition">Pollos</button>
+            <button onclick="filtrar('Gallos')" class="bg-white border border-gray-200 text-gray-600 px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-50 transition">Gallos de pelea</button>
+            <button onclick="filtrar('Guajolotes')" class="bg-white border border-gray-200 text-gray-600 px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-50 transition">Guajolotes</button>
         </div>
 
-        <!-- ==========================================
-             SECCIÓN 1: POLLOS VIVOS
-        =========================================== -->
-        <section id="pollos" class="mb-20">
-            <div class="flex items-center gap-4 mb-8">
-                <h2 class="text-2xl font-bold text-gray-900">Pollos vivos</h2>
-                <div class="flex-grow h-px bg-gray-100"></div>
+        <!-- CONTENEDOR DINÁMICO (Target para main.js) -->
+        <div id="contenedor-productos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- El contenido se genera dinámicamente mediante cargarCatalogo() en main.js -->
+            <div class="col-span-full flex flex-col items-center py-20">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D65D46] mb-4"></div>
+                <p class="text-gray-400 font-serif italic">Conectando con la granja...</p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Gallina Criolla -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="relative h-64">
-                        <img src="URL_CRIOLLA.jpg" alt="Gallina Criolla" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded font-bold backdrop-blur-sm">Stock: 120</span>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-xl font-bold text-gray-950">Gallina Criolla</h3>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4">DOBLE PROPÓSITO</p>
-                        <p class="text-gray-600 text-sm mb-6">Excelente para huevo y carne en sistemas de traspatio.</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-[#D65D46]">$280</span>
-                            <span class="text-[10px] text-gray-400">MXN / UNIDAD</span>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex gap-2">
-                        <button class="flex-1 border border-gray-200 py-2 rounded-lg text-sm">Detalles</button>
-                        <button class="flex-[1.5] bg-[#D65D46] text-white py-2 rounded-lg text-sm">+ Añadir</button>
-                    </div>
-                </div>
-
-                <!-- Gallina Isa Brown -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="relative h-64">
-                        <img src="URL_ISA_BROWN.jpg" alt="Isa Brown" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded font-bold backdrop-blur-sm">Stock: 150</span>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-xl font-bold text-gray-950">Gallina Isa Brown</h3>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4">POSTURA</p>
-                        <p class="text-gray-600 text-sm mb-6">Híbrida líder mundial: hasta 320 huevos al año.</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-[#D65D46]">$320</span>
-                            <span class="text-[10px] text-gray-400">MXN / UNIDAD</span>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex gap-2">
-                        <button class="flex-1 border border-gray-200 py-2 rounded-lg text-sm">Detalles</button>
-                        <button class="flex-[1.5] bg-[#D65D46] text-white py-2 rounded-lg text-sm">+ Añadir</button>
-                    </div>
-                </div>
-                
-                <!-- Gallina Sussex -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="relative h-64">
-                        <img src="URL_SUSSEX.jpg" alt="Sussex" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded font-bold backdrop-blur-sm">Stock: 110</span>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-xl font-bold text-gray-950">Gallina Sussex</h3>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4">DOBLE PROPÓSITO</p>
-                        <p class="text-gray-600 text-sm mb-6">Raza inglesa centenaria, plumaje blanco y detalles negros.</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-[#D65D46]">$380</span>
-                            <span class="text-[10px] text-gray-400">MXN / UNIDAD</span>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex gap-2">
-                        <button class="flex-1 border border-gray-200 py-2 rounded-lg text-sm">Detalles</button>
-                        <button class="flex-[1.5] bg-[#D65D46] text-white py-2 rounded-lg text-sm">+ Añadir</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ==========================================
-             SECCIÓN 2: GALLOS DE PELEA
-        =========================================== -->
-        <section id="gallos" class="mb-20">
-            <div class="flex items-center gap-4 mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Gallos de pelea</h2>
-                <div class="flex-grow h-px bg-gray-100"></div>
-            </div>
-
-            <!-- Banner Informativo de Combate -->
-            <div class="bg-[#F3F1ED] p-4 rounded-xl mb-12 border border-gray-200">
-                <p class="text-sm text-gray-700">
-                    <span class="font-bold">Razas premium de combate.</span> Cada ejemplar incluye descripción de genética y curiosidades de su linaje. Haz click en <span class="italic font-medium border-b border-gray-400">Detalles</span> para conocer su historia.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Gallo Sweater -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="relative h-72">
-                        <img src="URL_SWEATER.jpg" alt="Gallo Sweater" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-green-800/80 text-white text-[10px] px-2 py-1 rounded font-bold">Stock: 100</span>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-xl font-bold text-gray-950">Gallo Sweater</h3>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4">COMBATE PREMIUM</p>
-                        <p class="text-gray-600 text-sm mb-6">Velocidad y precisión en el ataque. Linaje de Carol Nesmith.</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-[#D65D46]">$4,500</span>
-                            <span class="text-[10px] text-gray-400">MXN / UNIDAD</span>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex gap-2">
-                        <button class="flex-1 border border-gray-200 py-2 rounded-lg text-sm">Detalles</button>
-                        <button class="flex-[1.5] bg-[#D65D46] text-white py-2 rounded-lg text-sm">+ Añadir</button>
-                    </div>
-                </div>
-
-                <!-- Gallo Kelso -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="relative h-72">
-                        <img src="URL_KELSO.jpg" alt="Gallo Kelso" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-green-800/80 text-white text-[10px] px-2 py-1 rounded font-bold">Stock: 100</span>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-xl font-bold text-gray-950">Gallo Kelso</h3>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4">COMBATE PREMIUM</p>
-                        <p class="text-gray-600 text-sm mb-6">Inteligencia táctica y gran capacidad de cambio de altura.</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-[#D65D46]">$5,000</span>
-                            <span class="text-[10px] text-gray-400">MXN / UNIDAD</span>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex gap-2">
-                        <button class="flex-1 border border-gray-200 py-2 rounded-lg text-sm">Detalles</button>
-                        <button class="flex-[1.5] bg-[#D65D46] text-white py-2 rounded-lg text-sm">+ Añadir</button>
-                    </div>
-                </div>
-
-                <!-- Gallo Hatch -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="relative h-72">
-                        <img src="URL_HATCH.jpg" alt="Gallo Hatch" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-green-800/80 text-white text-[10px] px-2 py-1 rounded font-bold">Stock: 100</span>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-xl font-bold text-gray-950">Gallo Hatch</h3>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4">COMBATE PREMIUM</p>
-                        <p class="text-gray-600 text-sm mb-6">Pegada demoledora y resistencia legendaria. Linaje clásico.</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-[#D65D46]">$4,800</span>
-                            <span class="text-[10px] text-gray-400">MXN / UNIDAD</span>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex gap-2">
-                        <button class="flex-1 border border-gray-200 py-2 rounded-lg text-sm">Detalles</button>
-                        <button class="flex-[1.5] bg-[#D65D46] text-white py-2 rounded-lg text-sm">+ Añadir</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ... (Mantén el Header y las secciones de Pollos y Gallos igual) ... -->
-
-        <!-- SECCIÓN 3: GUAJOLOTES (Añadida al final) -->
-        <section id="guajolotes" class="mb-20">
-            <div class="flex items-center gap-4 mb-8">
-                <h2 class="text-2xl font-bold text-gray-900">Guajolotes (Pavos)</h2>
-                <div class="flex-grow h-px bg-gray-100"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Guajolote Bronceado -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="relative h-64">
-                        <img src="URL_GUAJOLOTE_BRONCE.jpg" alt="Guajolote Bronceado" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded font-bold backdrop-blur-sm">Stock: 45</span>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-xl font-bold text-gray-950">Guajolote Bronceado</h3>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4">RAZA PESADA</p>
-                        <p class="text-gray-600 text-sm mb-6">Variedad de gran tamaño, ideal para producción de carne con excelente sabor y rendimiento.</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-[#D65D46]">$850</span>
-                            <span class="text-[10px] text-gray-400">MXN / UNIDAD</span>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex gap-2">
-                        <button class="flex-1 border border-gray-200 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition">Detalles</button>
-                        <button class="flex-[1.5] bg-[#D65D46] text-white py-2 rounded-lg text-sm font-medium hover:bg-[#b84d39] transition">+ Añadir</button>
-                    </div>
-                </div>
-
-                <!-- Guajolote Blanco -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="relative h-64">
-                        <img src="URL_GUAJOLOTE_BLANCO.jpg" alt="Guajolote Blanco" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded font-bold backdrop-blur-sm">Stock: 30</span>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-xl font-bold text-gray-950">Guajolote Blanco</h3>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4">DOBLE PROPÓSITO</p>
-                        <p class="text-gray-600 text-sm mb-6">Pavo de crecimiento acelerado y plumaje blanco limpio, muy popular en granjas comerciales.</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-[#D65D46]">$920</span>
-                            <span class="text-[10px] text-gray-400">MXN / UNIDAD</span>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex gap-2">
-                        <button class="flex-1 border border-gray-200 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition">Detalles</button>
-                        <button class="flex-[1.5] bg-[#D65D46] text-white py-2 rounded-lg text-sm font-medium hover:bg-[#b84d39] transition">+ Añadir</button>
-                    </div>
-                </div>
-
-                <!-- Guajolote Criollo -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="relative h-64">
-                        <img src="URL_GUAJOLOTE_CRIOLLO.jpg" alt="Guajolote Criollo" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded font-bold backdrop-blur-sm">Stock: 60</span>
-                    </div>
-                    <div class="p-6 flex-grow">
-                        <h3 class="text-xl font-bold text-gray-950">Guajolote Criollo</h3>
-                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-4">RÚSTICO</p>
-                        <p class="text-gray-600 text-sm mb-6">Ejemplares con gran resistencia inmunológica, criados en libertad y adaptados al entorno local.</p>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-2xl font-bold text-[#D65D46]">$750</span>
-                            <span class="text-[10px] text-gray-400">MXN / UNIDAD</span>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex gap-2">
-                        <button class="flex-1 border border-gray-200 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition">Detalles</button>
-                        <button class="flex-[1.5] bg-[#D65D46] text-white py-2 rounded-lg text-sm font-medium hover:bg-[#b84d39] transition">+ Añadir</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        </div>
     </main>
 
-    <footer class="py-12 bg-white border-t border-gray-100 text-center text-[10px] text-gray-400 uppercase tracking-[0.2em]">
-        Granja Premium © 2026 - Todos los derechos reservados
+    <footer class="py-12 bg-white border-t border-gray-100 text-center">
+        <p class="text-[10px] text-gray-400 uppercase tracking-[0.2em]">Granja Premium © 2026 - Control de Inventario v1.0</p>
     </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
 </body>
 </html>

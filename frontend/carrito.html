@@ -20,6 +20,13 @@
                 Granja Premium
             </a>
             <div class="flex items-center gap-6">
+                <!-- Contador de productos en el header -->
+                <div class="relative group cursor-pointer mr-4">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span class="absolute -top-2 -right-3 w-5 h-5 bg-[#D65D46] text-white text-[11px] rounded-full flex items-center justify-center font-semibold hidden">0</span>
+                </div>
                 <a href="catalogo.html" class="text-sm font-medium hover:text-[#D65D46] transition">Volver al Catálogo</a>
             </div>
         </nav>
@@ -29,14 +36,15 @@
         <h1 class="text-3xl font-bold text-gray-950 mb-8 border-b pb-4">Tu Carrito</h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <!-- Lista de Productos -->
-            <div class="lg:col-span-2 space-y-6" id="cart-container">
-                <!-- Los productos se renderizarán aquí mediante JS -->
+            <!-- Lista de Productos Dinámica -->
+            <div class="lg:col-span-2 space-y-6">
+                <div id="items-carrito" class="space-y-4">
+                    <!-- Se llena automáticamente con carrito.js -->
+                </div>
                 
-                <!-- Estado Vacío (Fallback) -->
-                <div id="empty-cart-msg" class="hidden text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
-                    <p class="text-gray-500 mb-4">No hay productos en tu carrito todavía.</p>
-                    <a href="catalogo.html" class="inline-block bg-[#D65D46] text-white px-6 py-2 rounded-lg hover:bg-[#b84d39] transition">Ir a comprar</a>
+                <!-- Botón para volver si el carrito está vacío (controlado por JS) -->
+                <div id="empty-cart-action" class="hidden text-center py-10">
+                    <a href="catalogo.html" class="inline-block bg-gray-900 text-white px-8 py-3 rounded-xl hover:bg-gray-800 transition">Explorar Catálogo</a>
                 </div>
             </div>
 
@@ -46,19 +54,19 @@
                 <div class="space-y-4 mb-6">
                     <div class="flex justify-between text-gray-600">
                         <span>Subtotal</span>
-                        <span id="subtotal">$0.00</span>
+                        <span class="font-medium">$<span id="subtotal-precio">0.00</span></span>
                     </div>
                     <div class="flex justify-between text-gray-600">
                         <span>Envío</span>
                         <span class="text-green-600 font-medium">Gratis</span>
                     </div>
                     <hr class="border-gray-100">
-                    <div class="flex justify-between text-lg font-bold text-gray-950">
+                    <div class="flex justify-between text-2xl font-bold text-gray-950">
                         <span>Total</span>
-                        <span id="total">$0.00</span>
+                        <span class="text-[#D65D46]">$<span id="total-precio">0.00</span> <small class="text-[10px] text-gray-400">MXN</small></span>
                     </div>
                 </div>
-                <button class="w-full bg-[#D65D46] text-white py-4 rounded-xl font-bold hover:bg-[#b84d39] transition shadow-lg shadow-orange-100">
+                <button onclick="procesarCompra()" class="w-full bg-[#D65D46] text-white py-4 rounded-xl font-bold hover:bg-[#b84d39] transition shadow-lg shadow-orange-100">
                     Finalizar Compra
                 </button>
                 <p class="text-xs text-gray-400 text-center mt-4 uppercase tracking-wider">Pago seguro encriptado</p>
@@ -66,67 +74,49 @@
         </div>
     </main>
 
-    <script>
-        // Simulación de datos (En producción vendría de LocalStorage)
-        let cartItems = [
-            { id: 1, name: "Huevos Orgánicos (Docena)", price: 4.50, qty: 2, img: "https://images.unsplash.com/photo-1516734439911-37090875e533?auto=format&fit=crop&q=80&w=200" },
-            { id: 2, name: "Leche Fresca 1L", price: 2.80, qty: 1, img: "https://images.unsplash.com/photo-1550583724-1255818c053b?auto=format&fit=crop&q=80&w=200" }
-        ];
+    <!-- Scripts de funcionalidad -->
+    <script src="js/main.js"></script> <!-- Mantiene el contador del header sincronizado -->
+    <script src="js/carrito.js"></script> <!-- Gestiona la lógica de la lista y totales -->
 
-        function renderCart() {
-            const container = document.getElementById('cart-container');
-            const emptyMsg = document.getElementById('empty-cart-msg');
-            
-            if (cartItems.length === 0) {
-                emptyMsg.classList.remove('hidden');
+    <script>
+        // Función adicional para conectar con el resumen del aside
+        async function procesarCompra() {
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    
+            if (carrito.length === 0) {
+                alert("El carrito está vacío.");
                 return;
             }
 
-            container.innerHTML = cartItems.map(item => `
-                <div class="flex items-center gap-6 bg-white p-6 rounded-2xl border border-gray-100 hover:shadow-md transition">
-                    <img src="${item.img}" alt="${item.name}" class="w-24 h-24 object-cover rounded-xl">
-                    <div class="flex-1">
-                        <h3 class="font-bold text-gray-950">${item.name}</h3>
-                        <p class="text-sm text-gray-500 mb-2">Precio unitario: $${item.price.toFixed(2)}</p>
-                        <div class="flex items-center gap-4">
-                            <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden">
-                                <button onclick="updateQty(${item.id}, -1)" class="px-3 py-1 hover:bg-gray-50">-</button>
-                                <span class="px-3 py-1 text-sm font-medium border-x border-gray-200">${item.qty}</span>
-                                <button onclick="updateQty(${item.id}, 1)" class="px-3 py-1 hover:bg-gray-50">+</button>
-                            </div>
-                            <button onclick="removeItem(${item.id})" class="text-xs text-red-500 font-medium hover:underline">Eliminar</button>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="font-bold text-gray-950">$${(item.price * item.qty).toFixed(2)}</p>
-                    </div>
-                </div>
-            `).join('');
+            // Calculamos el total
+            const total = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
 
-            updateTotals();
-        }
+            const datosVenta = {
+                total: total,
+                items: carrito
+            };
 
-        function updateQty(id, delta) {
-            const item = cartItems.find(i => i.id === id);
-            if (item) {
-                item.qty = Math.max(1, item.qty + delta);
-                renderCart();
+            try {
+                const response = await fetch('http://localhost:3000/api/ventas/completar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datosVenta)
+                });
+
+                const resultado = await response.json();
+
+                if (resultado.success) {
+                    alert("¡Compra realizada con éxito! Folio: " + resultado.ventaId);
+                    localStorage.removeItem('carrito'); // Limpiar carrito
+                    window.location.href = 'index.html'; // Redirigir
+                } else {
+                    alert("Error: " + resultado.message);
+                }
+            } catch (error) {
+                console.error("Error al enviar la venta:", error);
+                alert("No se pudo conectar con el servidor.");
             }
         }
-
-        function removeItem(id) {
-            cartItems = cartItems.filter(i => i.id !== id);
-            renderCart();
-        }
-
-        function updateTotals() {
-            const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
-            document.getElementById('subtotal').innerText = `$${subtotal.toFixed(2)}`;
-            document.getElementById('total').innerText = `$${subtotal.toFixed(2)}`;
-        }
-
-        // Inicialización
-        renderCart();
     </script>
 </body>
 </html>

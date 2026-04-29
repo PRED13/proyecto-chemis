@@ -5,23 +5,23 @@ require('dotenv').config();
 const dbConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    server: '127.0.0.1', // Forzamos IPv4
-    port: 1433,          // Forzamos el puerto manualmente
+    server: process.env.DB_SERVER,
     database: process.env.DB_NAME,
     options: {
-        encrypt: false,             // Desactiva si es local (evita errores de certificados)
-        trustServerCertificate: true // Confía en el certificado local
+        instanceName: 'SERVER3', // Tu instancia activa según la imagen
+        encrypt: false,          // Desactivado para desarrollo local
+        trustServerCertificate: true
     }
 };
 
 const poolPromise = new sql.ConnectionPool(dbConfig)
     .connect()
     .then(pool => {
-        console.log('Conectado a SQL Server con éxito');
+        console.log('✅ Conectado a SQL Server (SERVER3) con éxito');
         return pool;
     })
-    .catch(err => console.log('Fallo en la conexión a la base de datos: ', err));
+    .catch(err => {
+        console.log('❌ Fallo en la conexión:', err.message);
+    });
 
-module.exports = {
-    sql, poolPromise
-};
+module.exports = { sql, poolPromise };
