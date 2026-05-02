@@ -12,6 +12,8 @@
                         url('TU_URL_DE_IMAGEN_CABECERA.jpg') center/cover no-repeat;
         }
     </style>
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 
 <body class="bg-gray-50 text-gray-900 font-sans">
@@ -32,17 +34,18 @@
 
             <!-- Acciones de usuario -->
             <div class="flex items-center gap-6 text-sm">
+                <!-- Carrito (Se mantiene estático) -->
                 <a href="carrito.html" class="relative group">
                     <svg class="w-6 h-6 text-gray-700 group-hover:text-[#D65D46] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                    <span class="absolute -top-2 -right-3 w-5 h-5 bg-[#D65D46] text-white text-[11px] rounded-full flex items-center justify-center font-semibold">12</span>
+                    <!-- El contador (12) debería ser manejado por tu función actualizarContadorCarrito() -->
+                    <span id="carrito-count" class="absolute -top-2 -right-3 w-5 h-5 bg-[#D65D46] text-white text-[11px] rounded-full flex items-center justify-center font-semibold">0</span>
                 </a>
-
-                <a href="login.html" class="text-gray-700 hover:text-gray-950 font-medium transition-colors">Iniciar sesión</a>
-                <a href="registrarse.html" class="bg-[#D65D46] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#b84d39] transition-all shadow-sm active:scale-95">
-                    Registrarse
-                </a>
+                    <!-- CONTENEDOR DINÁMICO: Aquí es donde main.js inyectará el contenido -->
+                <div id="auth-links" class="flex items-center gap-6">
+                    <!-- Se llenará automáticamente: Iniciar sesión/Registrarse O "Hola, Usuario"/Cerrar Sesión -->
+                </div>
             </div>
         </nav>
     </header>
@@ -147,6 +150,18 @@
             <p>&copy; Granja Premium @ 2026 - Todos los derechos reservados</p>
         </div>
     </footer>
+    <!-- Dependencias: jQuery y Toastr JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+    <script>
+        // Configuración global de Toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+    </script>
 </body>
 </html>

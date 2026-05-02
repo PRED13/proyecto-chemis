@@ -11,29 +11,33 @@
     <!-- Header -->
     <header class="bg-white sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Logo principal -->
             <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-gray-950">
                 <span class="w-8 h-8 flex items-center justify-center bg-[#F37E58] text-white rounded-full text-lg font-serif">g</span>
                 Granja Premium
             </a>
-            
+        
+            <!-- Navegación central -->
             <div class="hidden md:flex items-center gap-8 text-sm text-gray-700">
-                <a href="index.html" class="hover:text-gray-950">Inicio</a>
+                <a href="index.html" class="hover:text-gray-950 transition-colors">Inicio</a>
                 <a href="catalogo.html" class="font-bold text-gray-950">Catálogo</a>
             </div>
 
+            <!-- Acciones de usuario -->
             <div class="flex items-center gap-6 text-sm">
                 <!-- Enlace al Carrito con Contador Dinámico -->
                 <a href="carrito.html" class="relative group cursor-pointer" title="Ver carrito">
                     <svg class="w-6 h-6 text-gray-700 group-hover:text-[#D65D46] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                    <!-- El span será controlado por actualizarContadorCarrito() en main.js -->
+                        <!-- El id "carrito-count" permite que main.js actualice el número -->
                     <span id="carrito-count" class="absolute -top-2 -right-3 w-5 h-5 bg-[#D65D46] text-white text-[11px] rounded-full flex items-center justify-center font-semibold hidden">0</span>
                 </a>
-            
-                <a href="registrarse.html" class="bg-[#D65D46] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#b84d39] transition text-sm">
-                    Registrarse
-                </a>
+        
+                <!-- CONTENEDOR DINÁMICO: Se llenará mediante actualizarInterfazUsuario() en main.js -->
+                <div id="auth-links" class="flex items-center gap-6">
+                    <!-- Aquí aparecerán los botones de Login/Registro o el nombre del Usuario logueado -->
+                </div>
             </div>
         </nav>
     </header>

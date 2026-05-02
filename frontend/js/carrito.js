@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderizarCarrito();
 });
 
-// Función auxiliar para obtener el total numérico (necesaria para finalizarCompra)
+// Función auxiliar para obtener el total numérico
 function obtenerTotalNumerico() {
     const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     return carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
@@ -62,11 +62,15 @@ function cambiarCantidad(index, delta) {
     const nuevaCantidad = carrito[index].cantidad + delta;
 
     // Validación contra stock y límite inferior
-    if (nuevaCantidad > 0 && nuevaCantidad <= (carrito[index].stock || 99)) {
-        carrito[index].cantidad = nuevaCantidad;
-        localStorage.setItem('carrito', JSON.stringify(carrito));
-        renderizarCarrito();
-        if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito();
+    if (nuevaCantidad > 0) {
+        if (nuevaCantidad <= (carrito[index].stock || 99)) {
+            carrito[index].cantidad = nuevaCantidad;
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            renderizarCarrito();
+            if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito();
+        } else {
+            toastr.info('Límite de stock alcanzado para este producto');
+        }
     }
 }
 
@@ -75,6 +79,7 @@ function eliminarDelCarrito(index) {
     carrito.splice(index, 1);
     localStorage.setItem('carrito', JSON.stringify(carrito));
     renderizarCarrito();
+    toastr.info('Producto eliminado del carrito');
     if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito();
 }
 
@@ -84,13 +89,12 @@ async function finalizarCompra() {
     const total = obtenerTotalNumerico();
 
     if (!token) {
-        alert('Debes iniciar sesión para completar tu compra.');
-        window.location.href = 'registrarse.html';
+        toastr.warning('Debes iniciar sesión para comprar');
         return;
     }
 
     if (carrito.length === 0) {
-        alert('Tu carrito está vacío.');
+        toastr.error('Tu carrito está vacío');
         return;
     }
 
@@ -116,14 +120,17 @@ async function finalizarCompra() {
         const result = await response.json();
 
         if (result.success) {
-            alert('🚀 ¡Venta realizada con éxito! El stock ha sido actualizado.');
+            toastr.success('🚀 ¡Venta realizada con éxito!');
             localStorage.removeItem('carrito');
-            window.location.href = 'index.html';
+            // Esperar 1.5s para que el usuario vea el Toast antes de redirigir
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
         } else {
-            alert('Error al procesar la venta: ' + result.message);
+            toastr.error('Error: ' + result.message);
         }
     } catch (error) {
         console.error('Error en la conexión:', error);
-        alert('No se pudo conectar con el servidor de ventas.');
+        toastr.error('No se pudo conectar con el servidor');
     }
 }

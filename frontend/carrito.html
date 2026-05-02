@@ -9,18 +9,27 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body class="bg-gray-50 text-gray-900">
 
     <!-- Header -->
     <header class="bg-white sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Logo -->
             <a href="index.html" class="flex items-center gap-2 text-xl font-bold text-gray-950">
                 <span class="w-8 h-8 flex items-center justify-center bg-[#F37E58] text-white rounded-full text-lg font-serif">g</span>
                 Granja Premium
             </a>
-            <div class="flex items-center gap-6">
+
+            <!-- Acciones y Estado de Sesión -->
+            <div class="flex items-center gap-8">
                 <a href="catalogo.html" class="text-sm font-medium hover:text-[#D65D46] transition">Volver al Catálogo</a>
+                <!-- CONTENEDOR DINÁMICO: Aquí aparecerá "Hola, [Nombre]" o los botones de Login -->
+                <div id="auth-links" class="flex items-center gap-6 text-sm">
+                    <!-- Inyectado por js/main.js -->
+                </div>
             </div>
         </nav>
     </header>
@@ -64,5 +73,18 @@
     <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/carrito.js"></script>
+    <!-- Dependencias: jQuery y Toastr JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+     // Configuración global de Toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+    </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 async function cambiarStock(id, cantidadActual) {
     const nuevoStock = prompt("Introduce el nuevo stock:", cantidadActual);
-    if (nuevoStock === null) return;
+    if (nuevoStock === null || nuevoStock === "") return;
 
     const token = localStorage.getItem('token');
 
@@ -16,12 +16,13 @@ async function cambiarStock(id, cantidadActual) {
 
         const res = await response.json();
         if (res.success) {
-            alert("Inventario actualizado");
-            location.reload();
+            toastr.info('Inventario actualizado correctamente');
+            // Recargar la tabla sin refrescar toda la página sería lo ideal
+            setTimeout(() => location.reload(), 1500);
         } else {
-            alert("Error: " + res.message);
+            toastr.error('No se pudo actualizar: ' + res.message);
         }
     } catch (error) {
-        console.error(error);
+        toastr.error('Error crítico en el servidor');
     }
 }
