@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const productosController = require('../controllers/productosController');
-const authMiddleware = require('../middlewares/authMiddleware');
-const adminMiddleware = require('../middlewares/adminMiddleware'); // Importar con el nombre correcto
+const { authMiddleware, verificarToken } = require('../middlewares/authMiddleware');
+const adminMiddleware = require('../middlewares/adminMiddleware');
 
 // LOG DE DEPURACIÓN: Si ves un "false" en la consola, el archivo no se cargó bien.
 console.log("Carga de Middleware Admin:", typeof adminMiddleware === 'function');

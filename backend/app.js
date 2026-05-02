@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { conectarDB } = require('./config/db');
+const { poolPromise } = require('./config/db');
 
 // Importar Rutas
 const ventasRoutes = require('./routes/ventasRoutes');
@@ -12,9 +12,12 @@ const app = express();
 // Middlewares
 app.use(cors());
 app.use(express.json());
+app.get('/', (req, res) => {
+    res.send('🚀 El Backend de Granja Premium está operando correctamente.');
+});
 
-// Conectar Base de Datos
-conectarDB();
+// Conectar Base de Datos (poolPromise ya se conecta al importar db.js)
+// poolPromise ya está inicializándose en db.js
 
 // Definición de Endpoints
 app.use('/api/ventas', ventasRoutes);

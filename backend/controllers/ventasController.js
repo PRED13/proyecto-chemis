@@ -2,7 +2,7 @@ const sql = require('mssql');
 
 const completarVenta = async (req, res) => {
     const { total, items } = req.body;
-    const usuarioId = req.usuario.id; // Obtenido del token verificado
+    const usuarioId = req.user.id; // Obtenido del token verificado - NORMALIZADO
 
     try {
         const pool = await sql.connect();
@@ -17,17 +17,17 @@ const completarVenta = async (req, res) => {
                 INSERT INTO Ventas (usuario_id, total, fecha) 
                 OUTPUT INSERTED.id
                 VALUES (${usuarioId}, ${total}, GETDATE())`;
-            
+
             const ventaId = resultVenta.recordset[0].id;
 
             // 2. Procesar cada item (Validar stock y restar)
             for (const item of items) {
                 const requestStock = new sql.Request(transaction);
-                
+
                 // Verificar stock actual
                 const prodCheck = await requestStock.query`
                     SELECT stock, nombre FROM Productos WHERE id = ${item.id}`;
-                
+
                 const producto = prodCheck.recordset[0];
 
                 if (!producto || producto.stock < item.cantidad) {
@@ -57,7 +57,7 @@ const completarVenta = async (req, res) => {
 };
 
 const obtenerHistorial = async (req, res) => {
-    const usuarioId = req.usuario.id;
+    const usuarioId = req.user.id; // NORMALIZADO
 
     try {
         const pool = await sql.connect();
