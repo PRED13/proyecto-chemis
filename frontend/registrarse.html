@@ -29,10 +29,10 @@
                         <h1 class="text-3xl font-serif font-bold text-gray-950 mb-2">Bienvenido</h1>
                         <p class="text-gray-500 text-sm mb-8">Ingresa tus credenciales para continuar.</p>
 
-                        <form action="#" class="space-y-5">
+                        <form id="form-login-api" class="space-y-5">
                             <div>
                                 <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2">Correo Electrónico</label>
-                                <input type="email" placeholder="usuario@ejemplo.com" 
+                                <input type="email" id="login-correo" placeholder="usuario@ejemplo.com" required
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#D65D46] focus:ring-2 focus:ring-[#D65D46]/20 outline-none transition text-sm">
                             </div>
 
@@ -41,7 +41,7 @@
                                     <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold">Contraseña</label>
                                     <a href="#" class="text-[10px] text-[#D65D46] font-bold hover:underline">¿OLVIDASTE TU CONTRASEÑA?</a>
                                 </div>
-                                <input type="password" placeholder="••••••••" 
+                                <input type="password" id="login-password" placeholder="••••••••" required
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#D65D46] focus:ring-2 focus:ring-[#D65D46]/20 outline-none transition text-sm">
                             </div>
 
@@ -64,22 +64,22 @@
                         <h1 class="text-3xl font-serif font-bold text-gray-950 mb-2">Crear Cuenta</h1>
                         <p class="text-gray-500 text-sm mb-8">Únete a nuestra comunidad de granjeros.</p>
 
-                        <form action="#" class="space-y-5">
+                        <form id="form-register-api" class="space-y-5">
                             <div>
                                 <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2">Nombre Completo</label>
-                                <input type="text" placeholder="Juan Pérez" 
+                                <input type="text" id="reg-nombre" placeholder="Jose Pérez" required
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#D65D46] focus:ring-2 focus:ring-[#D65D46]/20 outline-none transition text-sm">
                             </div>
 
                             <div>
                                 <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2">Correo Electrónico</label>
-                                <input type="email" placeholder="usuario@ejemplo.com" 
+                                <input type="email" id="reg-correo" placeholder="usuario@ejemplo.com" required
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#D65D46] focus:ring-2 focus:ring-[#D65D46]/20 outline-none transition text-sm">
                             </div>
 
                             <div>
                                 <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2">Nueva Contraseña</label>
-                                <input type="password" placeholder="Mínimo 8 caracteres" 
+                                <input type="password" id="reg-password" placeholder="Mínimo 8 caracteres" required
                                     class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#D65D46] focus:ring-2 focus:ring-[#D65D46]/20 outline-none transition text-sm">
                             </div>
 
@@ -106,14 +106,67 @@
     </main>
 
     <script>
-        function toggleAuth() {
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            
-            loginForm.classList.toggle('hidden-form');
-            registerForm.classList.toggle('hidden-form');
-        }
-    </script>
+        const API_URL = 'http://localhost:3000/api/auth';
 
+        function toggleAuth() {
+            document.getElementById('login-form').classList.toggle('hidden-form');
+            document.getElementById('register-form').classList.toggle('hidden-form');
+        }
+
+        // --- LÓGICA DE REGISTRO ---
+        document.getElementById('form-register-api').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('reg-nombre').value;
+            const correo = document.getElementById('reg-correo').value;
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const res = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, correo, password })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('¡Cuenta creada con éxito! Por favor, inicia sesión.');
+                    toggleAuth(); // Cambiar al formulario de login
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (err) {
+                alert('Servidor fuera de línea');
+            }
+        });
+
+        // --- LÓGICA DE LOGIN ---
+        document.getElementById('form-login-api').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const correo = document.getElementById('login-correo').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ correo, password })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    // Guardar Token y Datos del Usuario
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    alert(`Bienvenido de nuevo, ${data.user.nombre}`);
+                    window.location.href = 'catalogo.html'; // Redirigir al éxito
+                } else {
+                    alert('Credenciales incorrectas');
+                }
+            } catch (err) {
+                alert('Error al conectar con el servidor');
+            }
+        });
+    </script>
 </body>
 </html>
