@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicialización unificada
     actualizarInterfazUsuario();
     actualizarContadorCarrito();
-    
+
     // Solo cargar catálogo si estamos en la página que tiene el contenedor
     if (document.getElementById('contenedor-productos')) {
         cargarCatalogo();
@@ -74,9 +74,9 @@ async function cargarCatalogo() {
     contenedor.innerHTML = '<p class="col-span-full text-center text-gray-500 font-serif py-20 italic">Cargando ejemplares disponibles...</p>';
 
     try {
-        const respuesta = await fetch('http://localhost:3000/api/productos');
+        const respuesta = await fetch('/api/productos');
         if (!respuesta.ok) throw new Error('Error en la respuesta del servidor');
-        
+
         const productos = await respuesta.json();
 
         if (productos.length === 0) {
@@ -99,7 +99,7 @@ async function cargarCatalogo() {
 function crearTarjetaProducto(ave) {
     // Escapar el objeto para evitar errores en el onclick
     const aveString = JSON.stringify(ave).replace(/'/g, "&apos;");
-    
+
     return `
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all group flex flex-col">
             <div class="relative h-64 overflow-hidden">
@@ -140,7 +140,7 @@ function crearTarjetaProducto(ave) {
 function agregarAlCarrito(producto) {
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     const index = carrito.findIndex(item => item.id === producto.id);
-    
+
     if (index !== -1) {
         if (carrito[index].cantidad < producto.stock) {
             carrito[index].cantidad += 1;
@@ -153,7 +153,7 @@ function agregarAlCarrito(producto) {
         carrito.push({ ...producto, cantidad: 1 });
         if (typeof toastr !== 'undefined') toastr.success(`${producto.nombre} añadido al carrito`);
     }
-    
+
     localStorage.setItem('carrito', JSON.stringify(carrito));
     actualizarContadorCarrito();
 }
@@ -161,10 +161,10 @@ function agregarAlCarrito(producto) {
 function actualizarContadorCarrito() {
     const contador = document.getElementById('carrito-count');
     if (!contador) return;
-    
+
     const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-    
+
     contador.textContent = totalItems;
     totalItems > 0 ? contador.classList.remove('hidden') : contador.classList.add('hidden');
 }

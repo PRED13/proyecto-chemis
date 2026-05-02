@@ -108,7 +108,7 @@ async function finalizarCompra() {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/ventas/completar', {
+        const response = await fetch('/api/ventas/completar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -10,7 +10,7 @@ async function cargarHistorial() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/ventas/historial', {
+        const response = await fetch('/api/ventas/historial', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const result = await response.json();

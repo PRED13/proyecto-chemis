@@ -5,11 +5,11 @@ async function cambiarStock(id, cantidadActual) {
     const token = localStorage.getItem('token');
 
     try {
-        const response = await fetch('http://localhost:3000/api/admin/stock', {
+        const response = await fetch('/api/admin/stock', {
             method: 'PUT',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` 
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ id, nuevoStock: parseInt(nuevoStock) })
         });

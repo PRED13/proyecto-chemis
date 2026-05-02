@@ -1,28 +1,38 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { poolPromise } = require('./config/db');
 
 // Importar Rutas
 const ventasRoutes = require('./routes/ventasRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-// const authRoutes = require('./routes/authRoutes'); // Si ya lo tienes creado
+const productosRoutes = require('./routes/productos');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
 // Middlewares
 app.use(cors());
 app.use(express.json());
-app.get('/', (req, res) => {
-    res.send('🚀 El Backend de Granja Premium está operando correctamente.');
-});
+
+// Servir archivos estáticos del frontend
+const frontendPath = path.join(__dirname, '../frontend');
+console.log('📁 Ruta del Frontend:', frontendPath);
+app.use(express.static(frontendPath));
 
 // Conectar Base de Datos (poolPromise ya se conecta al importar db.js)
 // poolPromise ya está inicializándose en db.js
 
 // Definición de Endpoints
+app.use('/api/productos', productosRoutes);
 app.use('/api/ventas', ventasRoutes);
 app.use('/api/admin', adminRoutes);
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
+
+// SPA: Cualquier ruta que no sea de API ni archivo estático devuelve index.html
+app.get(/^\/(?!api\/)/, (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
