@@ -1,4 +1,21 @@
 const jwt = require('jsonwebtoken');
+const authMiddleware = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; 
+
+    if (!token) {
+        return res.status(401).json({ success: false, mensaje: "Token no proporcionado" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // IMPORTANTE: Usa 'user' para que coincida con tu adminMiddleware
+        req.user = decoded; 
+        next();
+    } catch (error) {
+        res.status(401).json({ success: false, mensaje: "Token inválido o expirado" });
+    }
+};
 
 const verificarToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -34,4 +51,4 @@ const esAdmin = (req, res, next) => {
     }
 };
 
-module.exports = { verificarToken, esAdmin};
+module.exports = { verificarToken, esAdmin, authMiddleware};

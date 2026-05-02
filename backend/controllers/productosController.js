@@ -1,27 +1,28 @@
-const sql = require('mssql');
+// Cambia esto para usar tu configuración centralizada
+const { sql } = require('../config/db'); 
 
 const actualizarStock = async (req, res) => {
     const { id, nuevoStock } = req.body;
-
     try {
-        const pool = await sql.connect();
-        await pool.request()
+        // En mssql, si ya hiciste connect en app.js, puedes usar la petición directamente
+        const request = new sql.Request(); 
+        await request
             .input('id', sql.Int, id)
             .input('stock', sql.Int, nuevoStock)
             .query('UPDATE Productos SET stock = @stock WHERE id = @id');
 
         res.json({ success: true, message: 'Stock actualizado correctamente.' });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ success: false, message: 'Error al actualizar stock.' });
     }
 };
 
 const crearProducto = async (req, res) => {
     const { nombre, precio, stock, categoria, imagen_url } = req.body;
-
     try {
-        const pool = await sql.connect();
-        await pool.request()
+        const request = new sql.Request();
+        await request
             .input('nombre', sql.NVarChar, nombre)
             .input('precio', sql.Decimal(10, 2), precio)
             .input('stock', sql.Int, stock)
@@ -34,6 +35,7 @@ const crearProducto = async (req, res) => {
 
         res.json({ success: true, message: 'Producto creado con éxito.' });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ success: false, message: 'Error al crear producto.' });
     }
 };
