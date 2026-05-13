@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { poolPromise } = require('./config/db');
+const { verificarConexionSMTP } = require('./services/emailService');
 
 // Importar Rutas
 const ventasRoutes = require('./routes/ventasRoutes');
@@ -35,6 +36,8 @@ app.get(/^\/(?!api\/)/, (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`🚀 Servidor de Granja Premium activo en http://localhost:${PORT}`);
+    // Verificar conexión SMTP para envío de correos
+    await verificarConexionSMTP();
 });
