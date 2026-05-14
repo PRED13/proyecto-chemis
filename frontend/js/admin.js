@@ -149,3 +149,92 @@ async function cambiarStock(id, cantidadActual) {
         );
     }
 }
+
+async function crearProducto() {
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const descripcion = document.getElementById('descripcion').value.trim();
+    const precio = parseFloat(document.getElementById('precio').value);
+    const stock = parseInt(document.getElementById('stock').value);
+    const categoria_id = parseInt(document.getElementById('categoria_id').value);
+    const imagen_url = document.getElementById('imagen_url').value.trim();
+
+    if (
+        !nombre ||
+        !descripcion ||
+        !precio ||
+        stock < 0 ||
+        !categoria_id
+    ) {
+        return toastr.error(
+            'Completa todos los campos correctamente'
+        );
+    }
+
+    const token = localStorage.getItem('token');
+
+    try {
+
+        const response = await fetch('/api/admin', {
+
+            method: 'POST',
+
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+
+            body: JSON.stringify({
+                nombre,
+                descripcion,
+                precio,
+                stock,
+                categoria_id,
+                imagen_url
+            })
+        });
+
+        const res = await response.json();
+
+        if (!res.success) {
+
+            return toastr.error(
+                res.message || 'No se pudo crear el producto'
+            );
+        }
+
+        toastr.success('Producto creado correctamente');
+
+        setTimeout(() => {
+            location.reload();
+        }, 1200);
+
+    } catch (error) {
+
+        console.error(error);
+
+        toastr.error(
+            'Error de conexión con el servidor'
+        );
+    }
+}
+
+function seleccionarRaza() {
+
+    const select = document.getElementById('raza');
+
+    const opcionSeleccionada =
+        select.options[select.selectedIndex];
+
+    const nombre =
+        opcionSeleccionada.value;
+
+    const categoria =
+        opcionSeleccionada.dataset.categoria;
+
+    document.getElementById('nombre').value =
+        nombre || '';
+
+    document.getElementById('categoria_id').value =
+        categoria || '';
+}

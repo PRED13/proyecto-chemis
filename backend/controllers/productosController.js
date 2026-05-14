@@ -63,41 +63,109 @@ const actualizarStock = async (req, res) => {
 };
 
 const crearProducto = async (req, res) => {
-    const { nombre, precio, stock, categoria, imagen_url } = req.body;
-    
+
+    const {
+        nombre,
+        descripcion,
+        precio,
+        stock,
+        categoria_id,
+        imagen_url
+    } = req.body;
+
     try {
-        // VALIDACIÓN: Verificar que el stock inicial no exceda la capacidad máxima
+
+        if (!nombre || !precio || !categoria_id) {
+
+            return res.status(400).json({
+                success: false,
+                message: 'Faltan campos obligatorios.'
+            });
+        }
+
         if (stock > CAPACIDAD_MAXIMA) {
-            return res.status(400).json({ 
-                success: false, 
-                message: `❌ Stock no permitido. La capacidad máxima de la granja es ${CAPACIDAD_MAXIMA} unidades por ejemplar. Intento: ${stock}` 
+
+            return res.status(400).json({
+                success: false,
+                message:
+                    `❌ Stock no permitido. Máximo ${CAPACIDAD_MAXIMA} unidades.`
             });
         }
 
         if (stock < 0) {
-            return res.status(400).json({ 
-                success: false, 
-                message: '❌ El stock inicial no puede ser negativo.' 
+
+            return res.status(400).json({
+                success: false,
+                message:
+                    '❌ El stock no puede ser negativo.'
             });
         }
 
-        const request = new sql.Request();
-        await request
-            .input('nombre', sql.NVarChar, nombre)
-            .input('precio', sql.Decimal(10, 2), precio)
-            .input('stock', sql.Int, stock)
-            .input('categoria', sql.NVarChar, categoria)
-            .input('imagen_url', sql.NVarChar, imagen_url)
+        const pool = await poolPromise;
+
+        // Verificar categoría existente
+        const categoriaExiste = await pool.request()
+            .input('categoria_id', sql.Int, categoria_id)
             .query(`
-                INSERT INTO Productos (nombre, precio, stock, categoria, imagen_url)
-                VALUES (@nombre, @precio, @stock, @categoria, @imagen_url)
+                SELECT id
+                FROM Categorias
+                WHERE id = @categoria_id
             `);
 
-        console.log(`✅ Producto creado: "${nombre}" - Stock inicial: ${stock} unidades`);
-        res.json({ success: true, message: 'Producto creado con éxito.' });
+        if (!categoriaExiste.recordset.length) {
+
+            return res.status(400).json({
+                success: false,
+                message: 'La categoría no existe.'
+            });
+        }
+
+        await pool.request()
+            .input('nombre', sql.NVarChar, nombre)
+            .input('descripcion', sql.NVarChar, descripcion)
+            .input('precio', sql.Decimal(10, 2), precio)
+            .input('stock', sql.Int, stock)
+            .input('categoria_id', sql.Int, categoria_id)
+            .input('imagen_url', sql.NVarChar, imagen_url)
+            .query(`
+                INSERT INTO Productos (
+                    nombre,
+                    descripcion,
+                    precio,
+                    categoria_id,
+                    imagen_url,
+                    stock
+                )
+                VALUES (
+                    @nombre,
+                    @descripcion,
+                    @precio,
+                    @categoria_id,
+                    @imagen_url,
+                    @stock
+                )
+            `);
+
+        console.log(
+            `✅ Producto creado: ${nombre}`
+        );
+
+        res.json({
+            success: true,
+            message: 'Producto creado correctamente.'
+        });
+
     } catch (err) {
-        console.error('❌ Error al crear producto:', err);
-        res.status(500).json({ success: false, message: 'Error al crear producto.' });
+
+        console.error(
+            '❌ Error al crear producto:',
+            err
+        );
+
+        res.status(500).json({
+            success: false,
+            message: 'Error al crear producto.'
+        });
     }
 };
 

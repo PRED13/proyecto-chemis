@@ -1,11 +1,4 @@
 document.addEventListener('DOMContentLoaded', renderizarCarrito);
-
-const obtenerCarrito = () =>
-    JSON.parse(localStorage.getItem('carrito')) || [];
-
-const guardarCarrito = carrito =>
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-
 const formatoMoneda = valor =>
     `$${valor.toLocaleString(undefined, {
         minimumFractionDigits: 2
@@ -198,6 +191,63 @@ function cerrarModalCompra() {
     toggleModal(false);
 }
 
+function descargarTicket(carrito, subtotal, iva, totalFinal) {
+
+    const fecha = new Date().toLocaleString();
+
+    let contenido = `
+=====================================
+        GRANJA PREMIUM
+        TICKET DE COMPRA
+=====================================
+
+Fecha: ${fecha}
+
+PRODUCTOS:
+
+`;
+
+    carrito.forEach(item => {
+
+        const subtotalProducto =
+            item.precio * item.cantidad;
+
+        contenido += `
+${item.nombre}
+Cantidad: ${item.cantidad}
+Precio unitario: $${item.precio}
+Subtotal: $${subtotalProducto.toLocaleString()}
+-------------------------------------
+`;
+    });
+
+    contenido += `
+
+=====================================
+Subtotal: $${subtotal.toLocaleString()}
+IVA (16%): $${iva.toLocaleString()}
+TOTAL: $${totalFinal.toLocaleString()}
+=====================================
+
+Gracias por su compra.
+`;
+
+    const blob = new Blob(
+        [contenido],
+        { type: 'text/plain' }
+    );
+
+    const enlace = document.createElement('a');
+
+    enlace.href = URL.createObjectURL(blob);
+
+    enlace.download = `ticket-compra-${Date.now()}.txt`;
+
+    enlace.click();
+
+    URL.revokeObjectURL(enlace.href);
+}
+
 async function confirmarCompra() {
 
     toggleModal(false);
@@ -243,6 +293,12 @@ async function confirmarCompra() {
         }
 
         toastr.success('🚀 ¡Venta realizada con éxito!');
+        descargarTicket(
+            carrito,
+            subtotal,
+            iva,
+            totalFinal
+        );
 
         localStorage.removeItem('carrito');
 
