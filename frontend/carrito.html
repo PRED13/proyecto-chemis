@@ -69,6 +69,53 @@
             </aside>
         </div>
     </main>
+    <!-- Modal Confirmación Compra -->
+    <div id="modal-confirmacion"
+         class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+
+        <div class="bg-white rounded-2xl p-8 w-[90%] max-w-md shadow-2xl">
+            <h2 class="text-2xl font-bold mb-4 text-gray-900">
+                Confirmar compra
+            </h2>
+
+            <div class="space-y-3 text-gray-700">
+                <p>
+                    Tu pedido es de:
+                    <span id="modal-subtotal" class="font-bold text-[#D65D46]">
+                        $0.00
+                    </span>
+                </p>
+
+                <p>
+                    IVA (16%):
+                    <span id="modal-iva" class="font-bold">
+                        $0.00
+                    </span>
+                </p>
+
+                <hr>
+
+                <p class="text-xl font-bold">
+                    Total a pagar:
+                    <span id="modal-total" class="text-[#D65D46]">
+                        $0.00
+                    </span>
+                </p>
+            </div>
+
+            <div class="flex gap-4 mt-8">
+                <button onclick="cerrarModalCompra()"
+                    class="flex-1 border border-gray-300 py-3 rounded-xl hover:bg-gray-100 transition">
+                    Cancelar
+                </button>
+
+                <button onclick="confirmarCompra()"
+                    class="flex-1 bg-[#D65D46] text-white py-3 rounded-xl hover:bg-[#b84d39] transition">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="js/main.js"></script>

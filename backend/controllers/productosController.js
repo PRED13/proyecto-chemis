@@ -1,40 +1,64 @@
 // Cambia esto para usar tu configuración centralizada
-const { sql } = require('../config/db');
+const { poolPromise, sql } = require('../config/db');
 
 // Capacidad máxima de la granja: 100 unidades por ejemplar
 const CAPACIDAD_MAXIMA = 100;
 
 const actualizarStock = async (req, res) => {
+
     const { id, nuevoStock } = req.body;
 
     try {
-        // VALIDACIÓN: Verificar que el nuevo stock no exceda la capacidad máxima
+
         if (nuevoStock > CAPACIDAD_MAXIMA) {
+
             return res.status(400).json({
                 success: false,
-                message: `❌ Stock no permitido. La capacidad máxima de la granja es ${CAPACIDAD_MAXIMA} unidades por ejemplar. Solicitado: ${nuevoStock}`
+                message:
+                    `❌ Stock no permitido. Máximo ${CAPACIDAD_MAXIMA} unidades.`
             });
         }
 
         if (nuevoStock < 0) {
+
             return res.status(400).json({
                 success: false,
-                message: '❌ El stock no puede ser negativo.'
+                message:
+                    '❌ El stock no puede ser negativo.'
             });
         }
 
-        // En mssql, si ya hiciste connect en app.js, puedes usar la petición directamente
-        const request = new sql.Request();
-        await request
+        const pool = await poolPromise;
+
+        await pool.request()
             .input('id', sql.Int, id)
             .input('stock', sql.Int, nuevoStock)
-            .query('UPDATE Productos SET stock = @stock WHERE id = @id');
+            .query(`
+                UPDATE Productos
+                SET stock = @stock
+                WHERE id = @id
+            `);
 
-        console.log(`✅ Stock actualizado: Producto ID ${id} → ${nuevoStock} unidades`);
-        res.json({ success: true, message: `Stock actualizado correctamente a ${nuevoStock} unidades.` });
+        console.log(
+            `✅ Stock actualizado: Producto ${id} → ${nuevoStock}`
+        );
+
+        res.json({
+            success: true,
+            message: 'Stock actualizado correctamente.'
+        });
+
     } catch (err) {
-        console.error('❌ Error al actualizar stock:', err);
-        res.status(500).json({ success: false, message: 'Error al actualizar stock.' });
+
+        console.error(
+            '❌ Error al actualizar stock:',
+            err
+        );
+
+        res.status(500).json({
+            success: false,
+            message: 'Error al actualizar stock.'
+        });
     }
 };
 
