@@ -3,221 +3,450 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin | Gestión de Granja</title>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Fuente -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        body{
+            font-family: 'JetBrains Mono', monospace;
+            background:
+                radial-gradient(circle at top left, rgba(255,255,255,0.04), transparent 25%),
+                #0f1115;
+        }
+
+        .glass{
+            background: rgba(20,20,20,0.65);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.08);
+
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.02),
+                0 10px 30px rgba(0,0,0,0.45);
+        }
+
+        .minimal-input{
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #e5e7eb;
+            transition: all .2s ease;
+        }
+
+        .minimal-input:focus{
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124,58,237,.15);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .minimal-input::placeholder{
+            color: #6b7280;
+        }
+
+        /* ===== SELECT HYPERLAND ===== */
+
+        select.minimal-input{
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+
+            background-color: #16181d;
+            color: #f3f4f6;
+
+            background-image:
+                linear-gradient(45deg, transparent 50%, #8b5cf6 50%),
+                linear-gradient(135deg, #8b5cf6 50%, transparent 50%);
+
+            background-position:
+                calc(100% - 22px) calc(50% - 3px),
+                calc(100% - 16px) calc(50% - 3px);
+
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+        }
+
+        select.minimal-input option{
+            background: #16181d;
+            color: #f3f4f6;
+            padding: 12px;
+        }
+
+        select.minimal-input optgroup{
+            background: #0f1115;
+            color: #a78bfa;
+            font-weight: bold;
+        }
+
+        select.minimal-input:hover{
+            border-color: rgba(139,92,246,.45);
+            background-color: #1a1d24;
+        }
+
+        /* ===== BOTONES ===== */
+
+        .minimal-btn{
+            background: linear-gradient(135deg,#7c3aed,#4f46e5);
+            transition: all .2s ease;
+        }
+
+        .minimal-btn:hover{
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(124,58,237,.35);
+        }
+
+        /* ===== TABLA ===== */
+
+        table tbody tr{
+            transition: all .2s ease;
+        }
+
+        table tbody tr:hover{
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* ===== SCROLL ===== */
+
+        ::-webkit-scrollbar{
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb{
+            background: #2b2f3a;
+            border-radius: 999px;
+        }
+
+    </style>
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-md">
-        <h1 class="text-2xl font-bold mb-6">Gestión de Inventario</h1>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="border-b">
-                        <th class="py-2">Producto</th>
-                        <th class="py-2">Stock Actual</th>
-                        <th class="py-2">Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-inventario">
-                    <!-- Se llena con JS -->
-                </tbody>
-            </table>
+
+<body class="min-h-screen text-gray-200 p-6 md:p-10">
+
+    <!-- HEADER -->
+
+    <div class="max-w-6xl mx-auto mb-8">
+
+        <div class="flex items-center gap-3 mb-3">
+
+            <div class="w-3 h-3 rounded-full bg-violet-500"></div>
+            <div class="w-3 h-3 rounded-full bg-indigo-500"></div>
+            <div class="w-3 h-3 rounded-full bg-slate-500"></div>
+
         </div>
-    </div>
-    <!-- Crear Producto -->
-<div class="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-md mt-8">
 
-    <h2 class="text-2xl font-bold mb-6">
-        Añadir Nuevo Producto
-    </h2>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-white">
+            Gestión de Inventario
+        </h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <select
-            id="raza"
-            onchange="seleccionarRaza()"
-            class="border p-3 rounded-lg"
-        >
-            <option value="">
-                Selecciona una raza
-            </option>
-
-            <optgroup label="Gallinas">
-
-                <option
-                    value="Gallina Rhode Island Red"
-                    data-categoria="1"
-                >
-                    Rhode Island Red
-                </option>
-
-                <option
-                    value="Gallina Leghorn"
-                    data-categoria="1"
-                >
-                    Leghorn
-                </option>
-
-                <option
-                    value="Gallina Plymouth Rock"
-                    data-categoria="1"
-                >
-                    Plymouth Rock
-                </option>
-
-                <option
-                    value="Gallina Sussex"
-                    data-categoria="1"
-                >
-                    Sussex
-                </option>
-
-                <option
-                    value="Gallina Australorp"
-                    data-categoria="1"
-                >
-                    Australorp
-                </option>
-
-            </optgroup>
-
-            <optgroup label="Gallos de pelea">
-
-                <option
-                    value="Gallo Kelso"
-                    data-categoria="2"
-                >
-                    Kelso
-                </option>
-
-                <option
-                    value="Gallo Roundhead"
-                    data-categoria="2"
-                >
-                    Roundhead
-                </option>
-
-                <option
-                    value="Gallo Hatch"
-                    data-categoria="2"
-                >
-                    Hatch
-                </option>
-
-                <option
-                    value="Gallo Sweater"
-                    data-categoria="2"
-                >
-                    Sweater
-                </option>
-
-                <option
-                    value="Gallo Albany"
-                    data-categoria="2"
-                >
-                    Albany
-                </option>
-
-            </optgroup>
-
-            <optgroup label="Guajolotes">
-
-                <option
-                    value="Guajolote Bronce"
-                    data-categoria="3"
-                >
-                    Bronce
-                </option>
-
-                <option
-                    value="Guajolote Blanco Holandés"
-                    data-categoria="3"
-                >
-                    Blanco Holandés
-                </option>
-
-                <option
-                    value="Guajolote Narragansett"
-                    data-categoria="3"
-                >
-                    Narragansett
-                </option>
-
-                <option
-                    value="Guajolote Royal Palm"
-                    data-categoria="3"
-                >
-                    Royal Palm
-                </option>
-
-                <option
-                    value="Guajolote Bourbon Red"
-                    data-categoria="3"
-                >
-                    Bourbon Red
-                </option>
-
-            </optgroup>
-        </select>
-
-        <input
-            type="text"
-            id="nombre"
-             placeholder="Nombre del producto"
-            class="border p-3 rounded-lg bg-gray-100"
-            readonly
-        >
-
-        <input
-            type="number"
-            id="precio"
-            placeholder="Precio"
-            class="border p-3 rounded-lg"
-        >
-
-        <input
-            type="number"
-            id="stock"
-            placeholder="Stock"
-            class="border p-3 rounded-lg"
-        >
-
-        <select
-            id="categoria_id"
-            class="border p-3 rounded-lg bg-gray-100"
-            disabled
-        >
-            <option value="1">Gallinas</option>
-            <option value="2">Gallos de pelea</option>
-            <option value="3">Guajolotes</option>
-        </select>
-
-        <input
-            type="text"
-            id="imagen_url"
-            placeholder="URL de imagen"
-            class="border p-3 rounded-lg md:col-span-2"
-        >
-
-        <textarea
-            id="descripcion"
-            placeholder="Descripción"
-            class="border p-3 rounded-lg md:col-span-2"
-        ></textarea>
+        <p class="text-gray-400 mt-2 text-sm tracking-wide">
+            Panel minimalista estilo Hyperland
+        </p>
 
     </div>
 
-    <button
-        onclick="crearProducto()"
-        class="mt-6 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800"
-    >
-        Crear Producto
-    </button>
+    <!-- TABLA INVENTARIO -->
 
-</div>
+    <div class="max-w-6xl mx-auto glass rounded-3xl p-6 md:p-8">
+
+        <div class="flex items-center justify-between mb-6">
+
+            <h2 class="text-xl font-semibold flex items-center gap-3">
+                <i class="bi bi-box-seam text-violet-400"></i>
+                Inventario
+            </h2>
+
+            <div class="text-xs text-gray-500 border border-white/10 px-3 py-1 rounded-full">
+                realtime
+            </div>
+
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-white/5">
+
+            <table class="w-full text-left border-collapse overflow-hidden">
+
+                <thead class="bg-white/5 text-gray-400 text-sm uppercase tracking-wider">
+
+                    <tr>
+
+                        <th class="py-4 px-5 font-medium">
+                            Producto
+                        </th>
+
+                        <th class="py-4 px-5 font-medium">
+                            Stock Actual
+                        </th>
+
+                        <th class="py-4 px-5 font-medium">
+                            Acción
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody
+                    id="tabla-inventario"
+                    class="divide-y divide-white/5 text-gray-200">
+
+                    <!-- Se llena con JS -->
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- CREAR PRODUCTO -->
+
+    <div class="max-w-6xl mx-auto glass rounded-3xl p-6 md:p-8 mt-8">
+
+        <div class="flex items-center gap-3 mb-6">
+
+            <i class="bi bi-plus-circle text-violet-400 text-2xl"></i>
+
+            <div>
+
+                <h2 class="text-2xl font-bold text-white">
+                    Añadir Nuevo Producto
+                </h2>
+
+                <p class="text-gray-400 text-sm tracking-wide">
+                    Gestión minimalista de productos
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- SELECT RAZA -->
+
+            <select
+                id="raza"
+                onchange="seleccionarRaza()"
+                class="minimal-input p-4 rounded-2xl"
+            >
+
+                <option value="">
+                    Selecciona una raza
+                </option>
+
+                <optgroup label="Gallinas">
+
+                    <option
+                        value="Gallina Rhode Island Red"
+                        data-categoria="1"
+                    >
+                        Rhode Island Red
+                    </option>
+
+                    <option
+                        value="Gallina Leghorn"
+                        data-categoria="1"
+                    >
+                        Leghorn
+                    </option>
+
+                    <option
+                        value="Gallina Plymouth Rock"
+                        data-categoria="1"
+                    >
+                        Plymouth Rock
+                    </option>
+
+                    <option
+                        value="Gallina Sussex"
+                        data-categoria="1"
+                    >
+                        Sussex
+                    </option>
+
+                    <option
+                        value="Gallina Australorp"
+                        data-categoria="1"
+                    >
+                        Australorp
+                    </option>
+
+                </optgroup>
+
+                <optgroup label="Gallos de pelea">
+
+                    <option
+                        value="Gallo Kelso"
+                        data-categoria="2"
+                    >
+                        Kelso
+                    </option>
+
+                    <option
+                        value="Gallo Roundhead"
+                        data-categoria="2"
+                    >
+                        Roundhead
+                    </option>
+
+                    <option
+                        value="Gallo Hatch"
+                        data-categoria="2"
+                    >
+                        Hatch
+                    </option>
+
+                    <option
+                        value="Gallo Sweater"
+                        data-categoria="2"
+                    >
+                        Sweater
+                    </option>
+
+                    <option
+                        value="Gallo Albany"
+                        data-categoria="2"
+                    >
+                        Albany
+                    </option>
+
+                </optgroup>
+
+                <optgroup label="Guajolotes">
+
+                    <option
+                        value="Guajolote Bronce"
+                        data-categoria="3"
+                    >
+                        Bronce
+                    </option>
+
+                    <option
+                        value="Guajolote Blanco Holandés"
+                        data-categoria="3"
+                    >
+                        Blanco Holandés
+                    </option>
+
+                    <option
+                        value="Guajolote Narragansett"
+                        data-categoria="3"
+                    >
+                        Narragansett
+                    </option>
+
+                    <option
+                        value="Guajolote Royal Palm"
+                        data-categoria="3"
+                    >
+                        Royal Palm
+                    </option>
+
+                    <option
+                        value="Guajolote Bourbon Red"
+                        data-categoria="3"
+                    >
+                        Bourbon Red
+                    </option>
+
+                </optgroup>
+
+            </select>
+
+            <!-- NOMBRE -->
+
+            <input
+                type="text"
+                id="nombre"
+                placeholder="Nombre del producto"
+                class="minimal-input p-4 rounded-2xl"
+                readonly
+            >
+
+            <!-- PRECIO -->
+
+            <input
+                type="number"
+                id="precio"
+                placeholder="Precio"
+                class="minimal-input p-4 rounded-2xl"
+            >
+
+            <!-- STOCK -->
+
+            <input
+                type="number"
+                id="stock"
+                placeholder="Stock"
+                class="minimal-input p-4 rounded-2xl"
+            >
+
+            <!-- CATEGORIA -->
+
+            <select
+                id="categoria_id"
+                class="minimal-input p-4 rounded-2xl"
+                disabled
+            >
+                <option value="1">Gallinas</option>
+                <option value="2">Gallos de pelea</option>
+                <option value="3">Guajolotes</option>
+            </select>
+
+            <!-- IMAGEN -->
+
+            <input
+                type="text"
+                id="imagen_url"
+                placeholder="URL de imagen"
+                class="minimal-input p-4 rounded-2xl md:col-span-2"
+            >
+
+            <!-- DESCRIPCION -->
+
+            <textarea
+                id="descripcion"
+                placeholder="Descripción"
+                class="minimal-input p-4 rounded-2xl md:col-span-2 min-h-[140px]"
+            ></textarea>
+
+        </div>
+
+        <!-- BOTON -->
+
+        <button
+            onclick="crearProducto()"
+            class="minimal-btn mt-8 text-white px-8 py-4 rounded-2xl font-semibold flex items-center gap-3"
+        >
+
+            <i class="bi bi-cloud-upload"></i>
+
+            Crear Producto
+
+        </button>
+
+    </div>
+
+    <!-- SCRIPTS -->
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
     <script src="js/admin.js"></script>
+
 </body>
 </html>
