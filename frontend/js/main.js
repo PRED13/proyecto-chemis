@@ -295,32 +295,39 @@ const guardarCarrito = carrito =>
     );
 
 function agregarAlCarrito(producto) {
-
-    // Validar si hay sesión iniciada
-    const token = localStorage.getItem('token');
-    if (!token) {
-        if (typeof toastr !== 'undefined') {
-            toastr.warning('Debes iniciar sesión para agregar productos');
-        }
-        setTimeout(() => {
-            window.location.href = 'registrarse.html';
-        }, 1500);
-        return;
-    }
-
-    if (producto.stock <= 0) {
-
-        if (typeof toastr !== 'undefined') {
-            toastr.error(
-                'Este producto no tiene stock disponible'
-            );
+    try {
+        console.log('agregarAlCarrito llamado:', producto && producto.id ? producto.id : producto);
+        // Validar si hay sesión iniciada
+        const token = localStorage.getItem('token');
+        if (!token) {
+            if (typeof toastr !== 'undefined') {
+                toastr.warning('Debes iniciar sesión para agregar productos');
+            }
+            setTimeout(() => {
+                window.location.href = 'registrarse.html';
+            }, 1500);
+            return;
         }
 
-        return;
-    }
+        if (!producto || typeof producto !== 'object') {
+            console.error('Producto inválido pasado a agregarAlCarrito:', producto);
+            if (typeof toastr !== 'undefined') toastr.error('No se pudo agregar el producto. Intenta de nuevo.');
+            return;
+        }
 
-    // Abrir modal de cantidad
-    abrirModalCantidad(producto);
+        if (Number(producto.stock) <= 0) {
+            if (typeof toastr !== 'undefined') {
+                toastr.error('Este producto no tiene stock disponible');
+            }
+            return;
+        }
+
+        // Abrir modal de cantidad
+        abrirModalCantidad(producto);
+    } catch (e) {
+        console.error('Error en agregarAlCarrito:', e);
+        if (typeof toastr !== 'undefined') toastr.error('Error al agregar producto. Revisa la consola.');
+    }
 }
 
 // ===============================

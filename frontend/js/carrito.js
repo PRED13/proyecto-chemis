@@ -26,7 +26,12 @@ function renderizarCarrito() {
 
     if (!contenedor) return;
 
-    const carrito = obtenerCarrito();
+    let carrito = obtenerCarrito();
+    if (!Array.isArray(carrito)) {
+        console.warn('Carrito en localStorage no es un array. Reseteando.');
+        carrito = [];
+        guardarCarrito(carrito);
+    }
 
     if (!carrito.length) {
 
@@ -42,7 +47,7 @@ function renderizarCarrito() {
 
     contenedor.innerHTML = carrito.map((item, index) => {
 
-        const subtotal = item.precio * item.cantidad;
+        const subtotal = Number(item.precio) * Number(item.cantidad);
 
         total += subtotal;
 
@@ -50,7 +55,7 @@ function renderizarCarrito() {
             <div class="flex items-center justify-between border-b border-gray-100 py-4">
 
                 <div class="flex items-center gap-4">
-                    <img src="${item.imagen_url}" 
+                    <img src="${item.imagen_url || 'https://via.placeholder.com/64'}" 
                          class="w-16 h-16 object-cover rounded-lg" 
                          alt="${item.nombre}">
 
