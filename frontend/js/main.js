@@ -53,14 +53,14 @@ function actualizarInterfazUsuario() {
                 </a>
 
                 ${payload.rol === 'admin'
-                    ? `
+                ? `
                         <a href="admin.html"
                            class="bg-black text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-800 transition">
                             Admin
                         </a>
                     `
-                    : ''
-                }
+                : ''
+            }
 
                 <button onclick="logout()"
                         class="text-sm text-red-500 hover:underline cursor-pointer">
@@ -211,7 +211,7 @@ function crearTarjetaProducto(ave) {
                 </span>
 
                 ${sinStock
-                    ? `
+            ? `
                         <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
 
                             <span class="bg-red-600 text-white px-4 py-2 rounded-xl font-bold text-sm">
@@ -220,8 +220,8 @@ function crearTarjetaProducto(ave) {
 
                         </div>
                     `
-                    : ''
-                }
+            : ''
+        }
 
             </div>
 
@@ -264,8 +264,8 @@ function crearTarjetaProducto(ave) {
                             ${sinStock ? 'disabled' : ''}
                             class="flex-[1.5] py-2 rounded-lg text-sm font-medium transition
                             ${sinStock
-                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                : 'bg-[#D65D46] text-white hover:bg-[#b84d39] cursor-pointer'}">
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'bg-[#D65D46] text-white hover:bg-[#b84d39] cursor-pointer'}">
 
                             ${sinStock ? 'Sin Stock' : '+ Añadir'}
 
@@ -296,6 +296,18 @@ const guardarCarrito = carrito =>
 
 function agregarAlCarrito(producto) {
 
+    // Validar si hay sesión iniciada
+    const token = localStorage.getItem('token');
+    if (!token) {
+        if (typeof toastr !== 'undefined') {
+            toastr.warning('Debes iniciar sesión para agregar productos');
+        }
+        setTimeout(() => {
+            window.location.href = 'registrarse.html';
+        }, 1500);
+        return;
+    }
+
     if (producto.stock <= 0) {
 
         if (typeof toastr !== 'undefined') {
@@ -307,52 +319,135 @@ function agregarAlCarrito(producto) {
         return;
     }
 
-    const carrito =
-        obtenerCarrito();
+    // Abrir modal de cantidad
+    abrirModalCantidad(producto);
+}
 
-    const index =
-        carrito.findIndex(
-            item => item.id === producto.id
-        );
+// ===============================
+// MODAL DE CANTIDAD
+// ===============================
+
+let productoEnModal = null;
+
+function abrirModalCantidad(producto) {
+    productoEnModal = producto;
+
+    // Actualizar UI del modal
+    document.getElementById('modal-titulo').textContent =
+        `¿Cuántas ${producto.nombre} quieres?`;
+
+    document.getElementById('modal-subtitulo').innerHTML =
+        `Stock disponible: <span id="modal-stock-disponible">${producto.stock}</span>`;
+
+    document.getElementById('modal-cantidad-input').value = 1;
+    document.getElementById('modal-cantidad-input').min = 1;
+    document.getElementById('modal-cantidad-input').max = producto.stock;
+
+    document.getElementById('modal-minimo').textContent = 1;
+    document.getElementById('modal-maximo').textContent = producto.stock;
+
+    // Mostrar modal
+    document.getElementById('modal-cantidad').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalCantidad() {
+    document.getElementById('modal-cantidad').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+    productoEnModal = null;
+}
+
+function aumentarCantidad() {
+    const input = document.getElementById('modal-cantidad-input');
+    const max = parseInt(input.max);
+    const actual = parseInt(input.value);
+
+    if (actual < max) {
+        input.value = actual + 1;
+    } else {
+        if (typeof toastr !== 'undefined') {
+            toastr.info(`Máximo disponible: ${max}`);
+        }
+    }
+}
+
+function disminuirCantidad() {
+    const input = document.getElementById('modal-cantidad-input');
+    const min = parseInt(input.min);
+    const actual = parseInt(input.value);
+
+    if (actual > min) {
+        input.value = actual - 1;
+    } else {
+        if (typeof toastr !== 'undefined') {
+            toastr.info(`Mínimo: ${min}`);
+        }
+    }
+}
+
+function confirmarCantidad() {
+    if (!productoEnModal) return;
+
+    const cantidadInput = document.getElementById('modal-cantidad-input');
+    const cantidad = parseInt(cantidadInput.value);
+    const stock = productoEnModal.stock;
+
+    // Validaciones
+    if (cantidad < 1) {
+        if (typeof toastr !== 'undefined') {
+            toastr.error('La cantidad debe ser al menos 1');
+        }
+        return;
+    }
+
+    if (cantidad > stock) {
+        if (typeof toastr !== 'undefined') {
+            toastr.error(`Máximo disponible: ${stock}`);
+        }
+        return;
+    }
+
+    // Agregar al carrito con la cantidad especificada
+    const carrito = obtenerCarrito();
+    const index = carrito.findIndex(item => item.id === productoEnModal.id);
 
     if (index !== -1) {
+        // Producto ya existe
+        const nuevaCantidad = carrito[index].cantidad + cantidad;
 
-        if (carrito[index].cantidad >= producto.stock) {
-
+        if (nuevaCantidad > stock) {
             if (typeof toastr !== 'undefined') {
                 toastr.error(
-                    'Límite de stock alcanzado'
+                    `Stock insuficiente. Disponible: ${stock}, Ya tienes: ${carrito[index].cantidad}`
                 );
             }
-
             return;
         }
 
-        carrito[index].cantidad += 1;
+        carrito[index].cantidad = nuevaCantidad;
 
         if (typeof toastr !== 'undefined') {
             toastr.success(
-                `${producto.nombre} actualizado`
+                `✓ ${productoEnModal.nombre}: ${cantidad} unidades añadidas (Total: ${nuevaCantidad})`
             );
         }
-
     } else {
-
+        // Nuevo producto
         carrito.push({
-            ...producto,
-            cantidad: 1
+            ...productoEnModal,
+            cantidad: cantidad
         });
 
         if (typeof toastr !== 'undefined') {
             toastr.success(
-                `${producto.nombre} añadido al carrito`
+                `✓ ${productoEnModal.nombre} (${cantidad} unidades) añadido al carrito`
             );
         }
     }
 
     guardarCarrito(carrito);
-
     actualizarContadorCarrito();
+    cerrarModalCantidad();
 }
 
 function actualizarContadorCarrito() {
