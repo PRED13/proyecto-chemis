@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', renderizarCarrito);
+
+const obtenerCarrito = () =>
+    JSON.parse(localStorage.getItem('carrito')) || [];
+
+const guardarCarrito = carrito =>
+    localStorage.setItem(
+        'carrito',
+        JSON.stringify(carrito)
+    );
+
 const formatoMoneda = valor =>
     `$${valor.toLocaleString(undefined, {
         minimumFractionDigits: 2
@@ -255,14 +265,22 @@ async function confirmarCompra() {
     const token = localStorage.getItem('token');
     const carrito = obtenerCarrito();
 
+    // Validar que hay token
+    if (!token) {
+        toastr.error('La sesión ha expirado. Por favor, inicia sesión nuevamente.');
+        localStorage.removeItem('carrito');
+        setTimeout(() => {
+            window.location.href = 'registrarse.html';
+        }, 1500);
+        return;
+    }
+
     const subtotal = obtenerTotalNumerico();
     const iva = subtotal * 0.16;
     const totalFinal = subtotal + iva;
 
     const datosVenta = {
-        subtotal,
-        iva,
-        total: totalFinal,
+        total: subtotal,  // El backend calcula IVA, enviamos solo subtotal
         items: carrito.map(({ id, cantidad, precio }) => ({
             id,
             cantidad,
@@ -284,15 +302,41 @@ async function confirmarCompra() {
             body: JSON.stringify(datosVenta)
         });
 
+        // Log para debugging
+        console.log('Status:', response.status);
+        console.log('Token enviado:', token.substring(0, 20) + '...');
+
+        // Si el servidor responde error, lo mostramos
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error del servidor:', errorData);
+
+            if (response.status === 401) {
+                toastr.error('Tu sesión ha expirado. Inicia sesión nuevamente.');
+                localStorage.removeItem('token');
+                localStorage.removeItem('carrito');
+                setTimeout(() => {
+                    window.location.href = 'registrarse.html';
+                }, 1500);
+                return;
+            }
+
+            return toastr.error(
+                'Error: ' + (errorData.message || errorData.error || 'Error desconocido')
+            );
+        }
+
         const result = await response.json();
 
         if (!result.success) {
             return toastr.error(
-                'Error: ' + result.message
+                '❌ Error en la compra: ' + result.message
             );
         }
 
         toastr.success('🚀 ¡Venta realizada con éxito!');
+        console.log('Venta completada:', result);
+
         descargarTicket(
             carrito,
             subtotal,
@@ -301,17 +345,18 @@ async function confirmarCompra() {
         );
 
         localStorage.removeItem('carrito');
+        actualizarContadorCarrito();
 
         setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
+            window.location.href = 'dashboard.html';
+        }, 2000);
 
     } catch (error) {
 
         console.error('Error en la conexión:', error);
 
         toastr.error(
-            'No se pudo conectar con el servidor'
+            '❌ Error de conexión: ' + error.message
         );
     }
 }
