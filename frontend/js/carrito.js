@@ -1,13 +1,5 @@
 document.addEventListener('DOMContentLoaded', renderizarCarrito);
 
-const obtenerCarrito = () =>
-    JSON.parse(localStorage.getItem('carrito')) || [];
-
-const guardarCarrito = carrito =>
-    localStorage.setItem(
-        'carrito',
-        JSON.stringify(carrito)
-    );
 
 const formatoMoneda = valor =>
     `$${valor.toLocaleString(undefined, {
@@ -21,33 +13,47 @@ function obtenerTotalNumerico() {
 
 function renderizarCarrito() {
 
+    console.log('renderizarCarrito ejecutándose');
+
     const contenedor = document.getElementById('items-carrito');
     const totalElemento = document.getElementById('total-precio');
+
+    console.log('contenedor:', contenedor);
 
     if (!contenedor) return;
 
     let carrito = obtenerCarrito();
+
+    console.log('carrito:', carrito);
+
     if (!Array.isArray(carrito)) {
-        console.warn('Carrito en localStorage no es un array. Reseteando.');
+        console.warn('Carrito inválido');
         carrito = [];
         guardarCarrito(carrito);
     }
 
     if (!carrito.length) {
 
+        console.log('carrito vacío');
+
         contenedor.innerHTML =
             '<p class="text-center py-10 text-gray-500">Tu carrito está vacío.</p>';
 
-        if (totalElemento) totalElemento.textContent = '0.00';
+        if (totalElemento) {
+            totalElemento.textContent = '0.00';
+        }
 
         return;
     }
+
+    console.log('renderizando productos...');
 
     let total = 0;
 
     contenedor.innerHTML = carrito.map((item, index) => {
 
-        const subtotal = Number(item.precio) * Number(item.cantidad);
+        const subtotal =
+            Number(item.precio) * Number(item.cantidad);
 
         total += subtotal;
 
@@ -55,59 +61,75 @@ function renderizarCarrito() {
             <div class="flex items-center justify-between border-b border-gray-100 py-4">
 
                 <div class="flex items-center gap-4">
-                    <img src="${item.imagen_url || 'https://via.placeholder.com/64'}" 
-                         class="w-16 h-16 object-cover rounded-lg" 
-                         alt="${item.nombre}">
+
+                    <img
+                        src="${item.imagen_url || 'https://via.placeholder.com/64'}"
+                        class="w-16 h-16 object-cover rounded-lg"
+                        alt="${item.nombre}"
+                    >
 
                     <div>
-                        <h3 class="font-bold text-gray-950">${item.nombre}</h3>
+
+                        <h3 class="font-bold text-gray-950">
+                            ${item.nombre}
+                        </h3>
+
                         <p class="text-xs text-gray-400 uppercase">
                             ${item.categoria || 'General'}
                         </p>
+
                     </div>
+
                 </div>
 
                 <div class="flex items-center gap-6">
 
                     <div class="flex items-center border border-gray-200 rounded-lg">
 
-                        <button onclick="cambiarCantidad(${index}, -1)"
-                                class="px-3 py-1 hover:bg-gray-50">
+                        <button
+                            onclick="cambiarCantidad(${index}, -1)"
+                            class="px-3 py-1 hover:bg-gray-50">
+
                             -
+
                         </button>
 
                         <span class="px-3 py-1 text-sm font-medium">
                             ${item.cantidad}
                         </span>
 
-                        <button onclick="cambiarCantidad(${index}, 1)"
-                                class="px-3 py-1 hover:bg-gray-50">
+                        <button
+                            onclick="cambiarCantidad(${index}, 1)"
+                            class="px-3 py-1 hover:bg-gray-50">
+
                             +
+
                         </button>
+
                     </div>
 
                     <span class="font-bold text-[#D65D46] w-24 text-right">
                         $${subtotal.toLocaleString()}
                     </span>
 
-                    <button onclick="eliminarDelCarrito(${index})"
-                            class="text-gray-400 hover:text-red-500">
+                    <button
+                        onclick="eliminarDelCarrito(${index})"
+                        class="text-gray-400 hover:text-red-500">
 
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                            </path>
-                        </svg>
+                        <i class="bi bi-trash"></i>
+
                     </button>
 
                 </div>
+
             </div>
         `;
     }).join('');
 
-    totalElemento.textContent = total.toLocaleString();
+    if (totalElemento) {
+        totalElemento.textContent =
+            total.toLocaleString();
+    }
 }
 
 function cambiarCantidad(index, delta) {
